@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+    <title>Sue's Pokedex</title>
+    <!-- MDIA 3295 Suyeong Gong A01207640 Assignment3 -->
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+</head>
+<body onload="freshLoad()">
+
+    <div class="theme-wrapper">
+        <h1>Pokedex</h1>
+        <p style="text-align: center; color: #fff;">&ast;Screen size 1280px is recommended</p>
+        <div id="my-container" class="data-container">
+            <!-- 18 cards will be in this div -->
+        </div>
+
+        <span id="loadMoreBtn" class="btn" onclick="loadNext()">
+            NEXT
+        </span>
+    </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        // 18 pokemon cards is in one page.
+        var limit = 18;
+        var offset = 0;
+
+        function freshLoad() { 
+            loadNext();
+        }
+
+        function loadNext() {
+            // Offset will be used to fetch the next set of data
+            $.ajax('https://pokeapi.co/api/v2/pokemon?offset=' + offset + '&limit=' + limit)
+                .done(function(alldata) {
+                    console.log('result: ' + JSON.stringify(alldata));
+                    // bring the array of pokemons 1 to 18.
+                    addToContainer(alldata.results);
+                })
+                .fail(function(xhr, status, error){
+                    console.log('error: ' + xhr.status)
+                })
+                .always(function(){
+                    console.log('Load next');
+                });
+        }
+
+        function addToContainer(alldata) {
+            var myContainer = document.querySelector('#my-container');
+            for (let i=0; i < alldata.length; i++) {
+                
+                // each pokemon in one card.
+                var box = document.createElement('div');
+                box.classList.add('pokemon-container');
+
+                // pokemon name, use endpoint - name.
+                var title = document.createElement('div');
+                title.innerText = alldata[i].name;
+                title.classList.add('pokemon-name');
+
+                var img = document.createElement('img');
+                // Use the offset to access the right image associated with item
+                // this api can accessed from each pokemon id's PokemonSprites(front_default)
+                img.src = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + [offset+1] + ".png"
+                // image alt is a name of pokemon(same as title)
+                img.alt = alldata[i].name;
+                // set image size
+                img.width = "180";
+                img.height = "135";
+
+                // pokemon index = pokemon id in api
+                var number = document.createElement('span');
+                // Offset will be used for the numeric value on the item
+                number.innerText = '# ' + [offset+1];
+                number.onclick = () => loadSinglePokemon(alldata[i].url);
+                
+                // in the each card, Pokemon title, Pokemon image and Pokemon number will be displayed.
+                box.appendChild(title);
+                box.appendChild(img);
+                box.appendChild(number);
+
+                // Display each card in a div (myContainer) too.
+                myContainer.appendChild(box);
+                // Increase the offset, once the item has been created
+                offset += 1;
+            }
+        }
+
+        function loadSinglePokemon(pokemonId) {
+            console.log(pokemonId);
+
+            $.ajax(pokemonId)
+                .done(function(result) {
+                    showPokemonDetails(result);
+                })
+                .fail(function(xhr, status, error) {
+
+                })
+                .always(function() {
+
+                });
+        }
+
+        function showPokemonDetails(result) {
+
+            var singleBox = document.querySelector('#pokemonDetailDialog');
+
+            singleBox.classList.add('dialog-active');
+
+            var infoBox = document.createElement('div');
+
+            var myTitle = document.createElement('h3');
+            myTitle.innerText = result.name;
+            myTitle.classList.add('single-title');
+
+            var myCard = document.createElement('div');
+            myCard.classList.add('card-display');
+
+            var myImage = document.createElement('img');
+            myImage.src = result.sprites.front_default;
+            myImage.classList.add('single-img');
+
+            var myInfo = document.createElement('div');
+
+            var myHeight = document.createElement('h4');
+            myHeight.innerHTML = 'Height: ' + result.height;
+
+            var myWeight = document.createElement('h4');
+            myWeight.innerText = 'Weight: ' + result.weight;
+
+            var abilities = document.createElement('h4');
+            abilities.innerText = 'Abilities: ';
+            myInfo.appendChild(abilities);
+            
+            for (let i=0; i<result.abilities.length; i++) {
+                var myAbilities = document.createElement('p');
+                myAbilities.classList.add('listing');
+                myAbilities.innerText = result.abilities[i].ability.name;
+
+                myInfo.appendChild(myAbilities);
+
+            }
+
+            var  types= document.createElement('h4');
+            types.innerText = 'Types: ';
+            myInfo.appendChild(types);
+
+            for (let i=0; i<result.types.length; i++) {
+                var myTypes = document.createElement('p');
+                myTypes.classList.add('listing');
+                myTypes.innerText = result.types[i].type.name;
+
+                myInfo.appendChild(myTypes);
+
+            }
+
+            console.log(myTypes.innerText);
+
+            var myClose = document.createElement('button');
+            myClose.innerText = 'x';
+            myClose.onclick = function() {
+                singleBox.classList.remove('dialog-active');
+                singleBox.innerHTML = '';
+            }
+            
+            infoBox.appendChild(myTitle);
+            
+            infoBox.appendChild(myCard);
+            myCard.appendChild(myImage);
+            
+            myCard.appendChild(myInfo);
+            
+            myInfo.appendChild(myHeight);
+            myInfo.appendChild(myWeight);
+            infoBox.appendChild(myClose);
+            singleBox.appendChild(infoBox);
+
+        }
+    </script>
+
+    <!-- loadSinglePokemon -->
+    <div id="pokemonDetailDialog" class="dialog-container">
+        
+    </div>
+
+</body>
+</html>

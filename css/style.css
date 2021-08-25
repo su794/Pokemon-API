@@ -1,0 +1,127 @@
+body{
+  font-family: 'DotGothic16', sans-serif;
+  background: linear-gradient(90deg, rgba(219,202,231,1) 0%, rgba(195,127,127,1) 50%, rgba(242,217,182,1) 100%);
+  letter-spacing: 1.7px;
+}
+
+.theme-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+}
+
+h4 {
+    margin: 0;
+}
+
+.btn{
+    background-color: #ffffff;
+    font-size: 1.5em;
+    cursor: pointer;    
+    border: black solid 1px;
+    border-radius: 3px;
+    padding: 10px;
+    text-align: center;
+    max-width: 150px;
+    transition: .25s;
+    float: right;
+}
+
+.btn:hover{
+    background-color: rgb(109,207,246);
+}
+
+.data-container{
+    display: flex;
+    justify-content: center;
+    flex-flow: row wrap;
+    margin: 30px;
+}
+
+.pokemon-container{
+    position: relative;
+    padding: 15px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 10px;  
+    flex-basis: 13%;
+    max-width: 13%;
+}
+
+.pokemon-name{
+    font-size: 1.3em;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px;
+}
+
+
+span {
+    border: 1px solid black;
+    padding: 5px;
+    cursor: pointer;
+    background-color: transparent;
+    transition: background-color .35s ease-in;
+}
+
+span:hover {
+    background-color: #eee;
+}
+
+/******** Popup ********/
+.dialog-container {
+    display: none;
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 35vw;
+    height: 40vh;
+    background-color: #eee;
+    border-radius: 25px;
+}
+
+.dialog-active {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.single-title {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 40px;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.card-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.single-img {
+    width: 200px;
+    margin-left: 60px;
+}
+
+.dialog-container button {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+}
+
+.listing {
+    margin: 3px 10px 2px 0;
+    background-color: white;
+    padding: 3px 10px;
+    width: fit-content;
+    border-radius: 9px;
+    display: inline-block;
+}
